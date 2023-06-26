@@ -65,8 +65,8 @@ class Model():
         self.model = model
         self.name = name
 
-    def train(self, X_train, y_train, **kargs):
-        self.model.fit(X_train, y_train, **kargs)
+    def train(self, X_train, y_train, **kwargs):
+        self.model.fit(X_train, y_train, **kwargs)
         
     def test(self, X_test, y_test):
         self.y_pred = (self.model.predict(X_test) > 0.5).astype(np.int32)
