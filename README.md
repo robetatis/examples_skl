@@ -1,1 +1,1 @@
-### Example imbalanced classification problem with scikit-learn
+### Example unbalanced classification problem with scikit-learn

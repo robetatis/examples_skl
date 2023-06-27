@@ -14,7 +14,7 @@ X, y = make_classification(
     n_samples=1000, 
     n_features=2, 
     n_redundant=0, 
-    n_clusters_per_class=2, 
+    n_clusters_per_class=1, 
     weights=[0.99, 0.01], 
     flip_y=0.01, 
     random_state=0)
@@ -105,7 +105,7 @@ print(f'f1_score = {f1_score(y_test, y_pred):.2f}')
 
 
 
-
+sfgsdfgsdgfsdfgsdfg
 
 
 
