@@ -6,6 +6,8 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 from collections import Counter
 import matplotlib.pyplot as plt
 from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import SMOTE
+from imblearn.combine import SMOTEENN
 
 # make synthetic data set
 X, y = make_classification(
@@ -19,7 +21,6 @@ X, y = make_classification(
 
 # check class distribution
 counter = Counter(y)
-print(counter)
 
 # scatterplot
 for k, _ in counter.items():
@@ -38,9 +39,10 @@ model = LogisticRegression()
 model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 
-print('Vanilla approach -------------------------------------------------------')
+print('\nVanilla approach -------------------------------------------------------')
+print(counter)
 print(f'accuracy = {accuracy_score(y_test, y_pred):.2f} ********* misleading!!')
-print(f'precision = {precision_score(y_test, y_pred):.2f} ********* misleading!!')
+print(f'precision = {precision_score(y_test, y_pred):.2f}')
 print(f'recall = {recall_score(y_test, y_pred):.2f}')
 print(f'f1_score = {f1_score(y_test, y_pred):.2f}')
 
@@ -49,21 +51,60 @@ print(f'f1_score = {f1_score(y_test, y_pred):.2f}')
 unders = RandomUnderSampler(sampling_strategy=0.5)
 X_unders, y_unders = unders.fit_resample(X, y)
 counter_unders = Counter(y_unders)
-print(counter_unders)
 
 X_train, X_test, y_train, y_test =  train_test_split(X_unders, y_unders, test_size=0.3, stratify=y_unders)
 model = LogisticRegression()
 model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 
-print('Undersampling majority class -------------------------------------------------------')
+print('\nUndersampling majority class -------------------------------------------------------')
+print(counter_unders)
 print(f'accuracy = {accuracy_score(y_test, y_pred):.2f} ********* misleading!!')
-print(f'precision = {precision_score(y_test, y_pred):.2f} ********* misleading!!')
+print(f'precision = {precision_score(y_test, y_pred):.2f}')
 print(f'recall = {recall_score(y_test, y_pred):.2f}')
 print(f'f1_score = {f1_score(y_test, y_pred):.2f}')
 
 
 # oversampling minority class -> SMOTE (synthetic minority oversampling technique)
+overs = SMOTE(sampling_strategy=0.5)
+X_overs, y_overs = overs.fit_resample(X, y)
+counter_overs = Counter(y_overs)
+
+X_train, X_test, y_train, y_test =  train_test_split(X_overs, y_overs, test_size=0.3, stratify=y_overs)
+model = LogisticRegression()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+
+print('\nOversampling minority class with SMOTE -------------------------------------------------------')
+print(counter_overs)
+print(f'accuracy = {accuracy_score(y_test, y_pred):.2f} ********* misleading!!')
+print(f'precision = {precision_score(y_test, y_pred):.2f}')
+print(f'recall = {recall_score(y_test, y_pred):.2f}')
+print(f'f1_score = {f1_score(y_test, y_pred):.2f}')
+
+
+# combined undersampling majority and oversampling minority class
+over_under = SMOTEENN(sampling_strategy=0.5)
+X_overs_unders, y_overs_unders = over_under.fit_resample(X, y)
+counter_overs_unders = Counter(y_overs_unders)
+
+X_train, X_test, y_train, y_test =  train_test_split(X_overs_unders, y_overs_unders, test_size=0.3, stratify=y_overs_unders)
+model = LogisticRegression()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+
+print('\nOver- and undersampling with SMOTEEN -------------------------------------------------------')
+print(counter_overs_unders)
+print(f'accuracy = {accuracy_score(y_test, y_pred):.2f} ********* misleading!!')
+print(f'precision = {precision_score(y_test, y_pred):.2f}')
+print(f'recall = {recall_score(y_test, y_pred):.2f}')
+print(f'f1_score = {f1_score(y_test, y_pred):.2f}')
+
+
+# cost-sensitive algorithms -> class_weight parameter in sklearn
+
+
+
 
 
 

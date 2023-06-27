@@ -6,11 +6,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
-from tensorflow.keras import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.losses import BinaryCrossentropy
-from tensorflow.keras.initializers import HeNormal
 
 class Data():
     
@@ -66,8 +61,8 @@ class Model():
         self.model = model
         self.name = name
 
-    def train(self, X_train, y_train, **kwargs):
-        self.model.fit(X_train, y_train, **kwargs)
+    def train(self, X_train, y_train):
+        self.model.fit(X_train, y_train)
         
     def test(self, X_test, y_test):
         self.y_pred = (self.model.predict(X_test) > 0.5).astype(np.int32)
@@ -97,17 +92,6 @@ class Pipeline():
         model_rf = Model(RandomForestClassifier(), name='random forest')
         model_rf.train(data.X_train, data.y_train)
         model_rf.test(data.X_test, data.y_test)
-
-        model_nn = Model(Sequential(), name='dense NN')
-        model_nn.model.add(
-            Dense(
-                units=20, 
-                input_shape=data.X_train.shape[1:],
-                activation='relu'))
-        model_nn.model.add(Dense(1, activation='sigmoid'))
-        model_nn.model.compile(optimizer=Adam(learning_rate=0.001), loss=BinaryCrossentropy())
-        model_nn.train(data.X_train, data.y_train, epochs=10, verbose=0)
-        model_nn.test(data.X_test, data.y_test)
 
 
 if __name__ == '__main__':
