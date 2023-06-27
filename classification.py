@@ -57,6 +57,7 @@ class Data():
             self.X, 
             self.y, 
             test_size=test_size, 
+            stratify=self.y,
             random_state=0)
 
 
@@ -73,6 +74,7 @@ class Model():
         report = metrics.classification_report(y_test, self.y_pred)
         print(self.name, '\n------------------------------')
         print(report)
+
 
 class Pipeline():
         
@@ -107,8 +109,10 @@ class Pipeline():
         model_nn.train(data.X_train, data.y_train, epochs=10, verbose=0)
         model_nn.test(data.X_test, data.y_test)
 
+
 if __name__ == '__main__':
     pipeline = Pipeline()
     pipeline.run()
+
 
 
