@@ -4,6 +4,14 @@ Predicting [Telco customer churn](https://www.kaggle.com/datasets/blastchar/telc
 
 Results:
 
+Without SMOTEEN:
+| Class   | Precision | Recall | F1-score | Support | 
+| ------- | --------- | ------ | -------- | ------- |
+| 0       |   0.84    |  0.90  |  0.87    |  1549   |
+| 1       |   0.66    |  0.53  |  0.59    |   561   |
+
+
+After SMOTEEN:
 | Class   | Precision | Recall | F1-score | Support | 
 | ------- | --------- | ------ | -------- | ------- |
 | 0       |   0.96    |  0.97  |  0.97    |  867    |
