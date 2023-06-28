@@ -1,6 +1,6 @@
 ### Example unbalanced classification problem with scikit-learn
 
-Predicting churn with logistic regression, using a combination of under- and oversampling (SMOTEEN) to address class imbalance
+Predicting [Telco customer churn](https://www.kaggle.com/datasets/blastchar/telco-customer-churn) with logistic regression, using a combination of under- and oversampling (SMOTEEN) to address class imbalance
 
 Results:
 
