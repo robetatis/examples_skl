@@ -6,8 +6,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
+from imblearn.combine import SMOTEENN
 
-class Data():
+class Data:
     
     def __init__(self, path, primary_key, numeric_features, features_to_encode, y_name, X_names):
         self.path = path
@@ -47,16 +48,21 @@ class Data():
     def check_balance_y(self):
         print(self.df[self.y_name].value_counts())
 
-    def train_test_split(self, test_size=0.3):
+    # combined undersampling majority and oversampling minority class
+    def smoteen(self, sampling_strategy=0.5):
+        self.sampling_strategy = sampling_strategy
+        over_under = SMOTEENN(sampling_strategy=sampling_strategy)
+        self.X_overs_unders, self.y_overs_unders = over_under.fit_resample(self.X, self.y)
+
+    def train_test_split(self, X, y, test_size=0.3):
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
-            self.X, 
-            self.y, 
+            X, y,
             test_size=test_size, 
-            stratify=self.y,
+            stratify=y,
             random_state=0)
 
 
-class Model():
+class Model:
     def __init__(self, model, name):
         self.model = model
         self.name = name
@@ -71,7 +77,7 @@ class Model():
         print(report)
 
 
-class Pipeline():
+class Pipeline:
         
     def run(self):
         
@@ -83,15 +89,22 @@ class Pipeline():
         data.check_balance_y()
         data.make_X()
         data.make_y()
-        data.train_test_split(test_size=0.3)        
+        data.train_test_split(data.X, data.y, test_size=0.3)
         
-        model_logsitic = Model(LogisticRegression(), name='logistic')
+        model_logsitic = Model(LogisticRegression(solver='liblinear'), name='logistic')
         model_logsitic.train(data.X_train, data.y_train)
         model_logsitic.test(data.X_test, data.y_test)
 
         model_rf = Model(RandomForestClassifier(), name='random forest')
         model_rf.train(data.X_train, data.y_train)
         model_rf.test(data.X_test, data.y_test)
+
+        data.smoteen()
+        data.train_test_split(data.X_overs_unders, data.y_overs_unders)
+        model_logistic_smoteen = Model(LogisticRegression(solver='liblinear'), name='logistic smoteen')        
+        model_logistic_smoteen.train(data.X_train, data.y_train)
+        model_logistic_smoteen.test(data.X_test, data.y_test)
+        data.check_balance_y()
 
 
 if __name__ == '__main__':
